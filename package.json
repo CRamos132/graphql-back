@@ -1,0 +1,30 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config -r sucrase/register src/index.js",
+    "server": "json-server --watch db.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "apollo-datasource-rest": "^3.7.0",
+    "apollo-server": "^3.13.0",
+    "dataloader": "^2.2.3",
+    "dotenv": "^17.2.1",
+    "graphql": "^16.11.0",
+    "json-server": "^1.0.0-beta.3",
+    "node-fetch": "^2.6.6"
+  },
+  "devDependencies": {
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
+    "sucrase": "^3.35.0"
+  }
+}
