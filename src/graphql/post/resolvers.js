@@ -1,3 +1,4 @@
+// Query resolvers
 const post = async (_, { id }, { dataSources }) => {
   const response = await dataSources.postApi.getPost(id)
 
@@ -16,6 +17,20 @@ const posts = async (_, { input }, { dataSources }) => {
   return response
 }
 
+// Mutation resolvers
+const createPost = async (_, { data }, { dataSources }) => {
+  return dataSources.postApi.createPost(data)
+}
+
+const updatePost = async (_, { postId, data }, { dataSources }) => {
+  return dataSources.postApi.updatePost(postId, data)
+}
+
+const deletePost = async (_, { postId }, { dataSources }) => {
+  return dataSources.postApi.deletePost(postId)
+}
+
+// Field resolvers
 const unixTimestamp = (parent) => {
   const baseDate = parent.createdAt
   const formattedDate = new Date(baseDate)
@@ -31,6 +46,11 @@ export const postResolvers = {
   Query: {
     posts,
     post
+  },
+  Mutation: {
+    createPost,
+    updatePost,
+    deletePost
   },
   Post: { unixTimestamp, user },
   PostResult: {

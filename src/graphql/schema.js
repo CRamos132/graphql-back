@@ -4,12 +4,14 @@ import { postTypeDefs } from "./post/typedefs"
 import { userResolvers } from "./user/resolvers"
 import { userTypeDefs } from "./user/typedefs"
 import { apiFilterTypedefs } from "./apiFilters/typedefs"
-import { apiFiltersResolvers } from "./apiFilters/resolvers"
 
 const rootTypeDefs = gql`
-    type Query {
-      _empty: Boolean
-    }
+  type Query {
+    _empty: Boolean
+  }
+  type Mutation {
+    _empty: Boolean
+  }
 `
 
 const rootResolvers = {
@@ -19,4 +21,4 @@ const rootResolvers = {
 }
 
 export const typeDefs = [rootTypeDefs, userTypeDefs, postTypeDefs, apiFilterTypedefs]
-export const resolvers = [rootResolvers, userResolvers, postResolvers, apiFiltersResolvers]
+export const resolvers = [rootResolvers, userResolvers, postResolvers]
