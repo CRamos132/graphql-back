@@ -13,10 +13,12 @@
   "dependencies": {
     "apollo-datasource-rest": "^3.7.0",
     "apollo-server": "^3.13.0",
+    "bcrypt": "^6.0.0",
     "dataloader": "^2.2.3",
     "dotenv": "^17.2.1",
     "graphql": "^16.11.0",
     "json-server": "^1.0.0-beta.3",
+    "jsonwebtoken": "^9.0.2",
     "node-fetch": "^2.6.6"
   },
   "devDependencies": {

@@ -1,8 +1,9 @@
-import { ValidationError } from "apollo-server"
+import { UserInputError, ValidationError } from "apollo-server"
+import bcrypt from 'bcrypt';
 
 export const createUserFn = async (userData, dataSource) => {
   const userInfo = await createUserInfo(userData, dataSource)
-  const { firstName, lastName, userName } = userInfo
+  const { firstName, lastName, userName, password } = userInfo
 
   const isUsernameAlreadyInUse = await userExistsByUsername(userName, dataSource)
 
@@ -10,18 +11,26 @@ export const createUserFn = async (userData, dataSource) => {
     throw new ValidationError('Username already in use')
   }
 
-  if (!firstName || !lastName || !userName) {
+  if (!firstName || !lastName || !userName || !password) {
     throw new ValidationError('Missing fields')
   }
 
+  validateUserPassword(password)
+
+  const userWithPasswordHash = await validateUserHash(userInfo)
+
   return await dataSource.post('', {
-    ...userInfo
+    ...userWithPasswordHash
   })
 }
 
 export const updateUserFn = async (userId, userData, dataSource) => {
   if (!userId) {
     throw new ValidationError('Missing user ID')
+  }
+
+  if (userData?.password) {
+    validateUserPassword(userData?.password)
   }
 
   if (userData?.userName) {
@@ -62,8 +71,33 @@ const userExistsById = async (userId, dataSource) => {
   }
 }
 
+const validateUserHash = async (user) => {
+  if (user.password && !user.passwordHash) {
+    const { password, ...rest } = user
+    const passwordHash = await bcrypt.hash(password, 12)
+    const newUserObject = {
+      ...rest,
+      passwordHash
+    }
+    return newUserObject
+  }
+  return user
+}
+
+const validateUserPassword = (password) => {
+  // Letra minúscula, letra maiúscula e número
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,30}$/;
+
+  if (!password.match(strongPasswordRegex)) {
+    throw new UserInputError(
+      'Password must contain at least: ' +
+      'One lower case letter, one upper case letter and one number.',
+    );
+  }
+};
+
 const createUserInfo = async (userData, dataSource) => {
-  const { firstName, lastName, userName } = userData
+  const { firstName, lastName, userName, password } = userData
 
   const lastPostByIndexRef = await dataSource.getUsers({
     _limit: 1,
@@ -78,6 +112,7 @@ const createUserInfo = async (userData, dataSource) => {
     userName,
     indexRef,
     posts: [],
+    password,
     createdAt: new Date().toISOString()
   }
 }

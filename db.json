@@ -159,6 +159,16 @@
       "userName": "marcia_carvalho81",
       "indexRef": 1,
       "createdAt": "2016-12-08T00:49:39.870Z"
+    },
+    {
+      "id": "2a4f",
+      "firstName": "Test",
+      "lastName": "Name",
+      "userName": "testName",
+      "indexRef": 21,
+      "posts": [],
+      "createdAt": "2025-09-29T11:40:09.486Z",
+      "passwordHash": "$2b$12$yKl7K0kKcu3vcc5FEqyq1ulXsMGc54EkbneM2rKMc1BP5ta/r29n2"
     }
   ],
   "posts": [
