@@ -13,13 +13,31 @@ export const createPostFn = async (postData, dataSource) => {
   })
 }
 
+const findPostOwner = async (postId, dataSource) => {
+  const foundPost = await dataSource.getPost(postId)
+
+  if (!foundPost) {
+    throw new ValidationError('Post not found')
+  }
+
+  const userId = dataSource.context.loggedUserId
+
+  if (foundPost.userId !== userId) {
+    throw new ValidationError('Action not permitted')
+  }
+
+  return foundPost
+}
+
 export const updatePostFn = async (postId, postData, dataSource) => {
   if (!postId) {
     throw new ValidationError('Missing post ID')
   }
 
-  if (postData?.userId) {
-    await userExists(postData.userId, dataSource)
+  const { userId } = await findPostOwner(postId, dataSource)
+
+  if (userId) {
+    await userExists(userId, dataSource)
   }
 
   return await dataSource.patch(postId, {
@@ -32,19 +50,11 @@ export const deletePostFn = async (postId, dataSource) => {
     throw new ValidationError('Missing post ID')
   }
 
-  await postExists(postId, dataSource)
+  await findPostOwner(postId, dataSource)
 
   const deleted = await dataSource.delete(postId)
 
   return !!deleted
-}
-
-const postExists = async (postId, dataSource) => {
-  try {
-    await dataSource.getPost(postId)
-  } catch (e) {
-    throw new ValidationError(`Post ${postId} not found`)
-  }
 }
 
 const userExists = async (userId, dataSource) => {

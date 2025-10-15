@@ -1,3 +1,5 @@
+import { checkOwner } from "../login/utils/login-functions"
+
 const user = async (_, { id }, { dataSources }) => {
   const data = await dataSources.userApi.getUser(id)
   return data
@@ -17,11 +19,13 @@ const createUser = async (_, { data }, { dataSources }) => {
   return dataSources.userApi.createUser(data)
 }
 
-const updateUser = async (_, { userId, data }, { dataSources }) => {
+const updateUser = async (_, { userId, data }, { dataSources, loggedUserId }) => {
+  checkOwner(userId, loggedUserId)
   return dataSources.userApi.updateUser(userId, data)
 }
 
-const deleteUser = async (_, { userId }, { dataSources }) => {
+const deleteUser = async (_, { userId }, { dataSources, loggedUserId }) => {
+  checkOwner(userId, loggedUserId)
   return dataSources.userApi.deleteUser(userId)
 }
 

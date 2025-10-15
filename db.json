@@ -178,7 +178,8 @@
       "indexRef": 22,
       "posts": [],
       "createdAt": "2025-09-30T11:35:26.852Z",
-      "passwordHash": "$2b$12$FMtmG4662oOLxd7SBYjs4OCKKs3irM3SVSfOfj/F97iXS5mOjcRre"
+      "passwordHash": "$2b$12$FMtmG4662oOLxd7SBYjs4OCKKs3irM3SVSfOfj/F97iXS5mOjcRre",
+      "token": ""
     }
   ],
   "posts": [
@@ -373,6 +374,22 @@
       "userId": "502",
       "indexRef": 19,
       "createdAt": "2017-04-26T19:39:05.420Z"
+    },
+    {
+      "id": "ebfa",
+      "title": "title",
+      "body": "body",
+      "userId": "ced0",
+      "indexRef": 25,
+      "createdAt": "2025-10-09T11:32:51.019Z"
+    },
+    {
+      "id": "6d6a",
+      "title": "mudou",
+      "body": "body",
+      "userId": "ced0",
+      "indexRef": 26,
+      "createdAt": "2025-10-09T11:33:06.537Z"
     }
   ],
   "comments": [

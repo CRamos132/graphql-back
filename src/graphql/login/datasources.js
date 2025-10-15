@@ -9,9 +9,10 @@ export class LoginApi extends RESTDataSource {
     this.baseURL = process.env.API_URL + '/users'
   }
 
-  async login(userName, password) {
+  async getUser({ userName, userId }) {
     const user = await this.get('', {
-      userName
+      ...(userName && { userName }),
+      ...(userId && { id: userId })
     }, {
       cacheOptions: { ttl: 0 }
     })
@@ -22,7 +23,13 @@ export class LoginApi extends RESTDataSource {
       throw new AuthenticationError('Username or password is not correct')
     }
 
-    const { passwordHash, id: userId } = user[0]
+    return user[0]
+  }
+
+  async login(userName, password) {
+    const user = await this.getUser({ userName })
+
+    const { passwordHash, id: userId } = user
 
     const isPasswordValid = await this.checkUserPassword(password, passwordHash)
 
@@ -34,10 +41,20 @@ export class LoginApi extends RESTDataSource {
       userId
     })
 
+    await this.patch(userId, { token })
+
     return {
       userId,
       token
     }
+  }
+
+  async logout(userId) {
+    await this.getUser({ userId })
+
+    await this.patch(userId, { token: '' }, { cacheOptions: { ttl: 0 } })
+
+    return true
   }
 
   async checkUserPassword(password, passwordHash) {

@@ -1,3 +1,5 @@
+import { checkIsLoggedIn } from "../login/utils/login-functions";
+
 // Query resolvers
 const post = async (_, { id }, { dataSources }) => {
   const response = await dataSources.postApi.getPost(id)
@@ -18,15 +20,22 @@ const posts = async (_, { input }, { dataSources }) => {
 }
 
 // Mutation resolvers
-const createPost = async (_, { data }, { dataSources }) => {
-  return dataSources.postApi.createPost(data)
+const createPost = async (_, { data }, { dataSources, loggedUserId }) => {
+  checkIsLoggedIn(loggedUserId)
+  const dataWithUserId = {
+    ...data,
+    userId: loggedUserId
+  }
+  return dataSources.postApi.createPost(dataWithUserId)
 }
 
-const updatePost = async (_, { postId, data }, { dataSources }) => {
+const updatePost = async (_, { postId, data }, { dataSources, loggedUserId }) => {
+  checkIsLoggedIn(loggedUserId)
   return dataSources.postApi.updatePost(postId, data)
 }
 
-const deletePost = async (_, { postId }, { dataSources }) => {
+const deletePost = async (_, { postId }, { dataSources, loggedUserId }) => {
+  checkIsLoggedIn(loggedUserId)
   return dataSources.postApi.deletePost(postId)
 }
 
