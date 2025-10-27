@@ -1,12 +1,9 @@
 import jwt from 'jsonwebtoken'
 import { UsersApi } from './user/datasources'
+import { cookieParser } from './login/utils/login-functions'
 
-const authorizeUser = async (req) => {
-  const { headers } = req
-  const { authorization } = headers
-
+const verifyJwtToken = async (token) => {
   try {
-    const [_bearer, token] = authorization.split(' ')
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
 
     const userApi = new UsersApi()
@@ -23,9 +20,37 @@ const authorizeUser = async (req) => {
   }
 }
 
-export const context = async ({ req }) => {
-  const loggedUserId = await authorizeUser(req)
+const authorizeBearerToken = async (req) => {
+  const { headers } = req
+  const { authorization } = headers
+
+  try {
+    const [_bearer, token] = authorization.split(' ')
+
+    return await verifyJwtToken(token)
+  } catch (e) {
+    return ''
+  }
+}
+
+export const context = async ({ req, res }) => {
+  const loggedUserId = await authorizeBearerToken(req)
+
+  if (!loggedUserId) {
+    const cookies = req.headers.cookie
+
+    if (cookies) {
+      const { jwtToken } = cookieParser(cookies)
+      const userId = verifyJwtToken(jwtToken)
+      return {
+        loggedUserId: userId,
+        res
+      }
+    }
+  }
+
   return {
-    loggedUserId
+    loggedUserId,
+    res
   }
 }

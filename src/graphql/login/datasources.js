@@ -43,6 +43,14 @@ export class LoginApi extends RESTDataSource {
 
     await this.patch(userId, { token })
 
+    this.context.res.cookie('jwtToken', token, {
+      secure: false, // in deployed envs must be true
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 2, // 2 days
+      path: '/',
+      sameSite: 'strict'
+    })
+
     return {
       userId,
       token
@@ -53,6 +61,7 @@ export class LoginApi extends RESTDataSource {
     await this.getUser({ userId })
 
     await this.patch(userId, { token: '' }, { cacheOptions: { ttl: 0 } })
+    this.context.res.clearCookie('jwtToken')
 
     return true
   }

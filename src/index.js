@@ -15,7 +15,12 @@ const server = new ApolloServer({
       userApi: new UsersApi(),
       loginApi: new LoginApi()
     }
-  }
+  },
+  uploads: false,
+  cors: {
+    credentials: true,
+    origin: ['http://localhost:3030']
+  },
 })
 
 server.listen(4003)
