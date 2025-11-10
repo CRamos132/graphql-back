@@ -1,9 +1,9 @@
 import { ApolloServer } from 'apollo-server'
-import { resolvers, typeDefs } from './graphql/schema'
-import { context } from './graphql/context'
-import { PostsApi } from './graphql/post/datasources'
-import { UsersApi } from './graphql/user/datasources'
-import { LoginApi } from './graphql/login/datasources'
+import { resolvers, typeDefs } from './graphql/schema/index'
+import { context } from './graphql/context/index'
+import { PostsApi } from './graphql/schema/post/datasources'
+import { UsersApi } from './graphql/schema/user/datasources'
+import { LoginApi } from './graphql/schema/login/datasources'
 
 const server = new ApolloServer({
   typeDefs,
@@ -19,7 +19,7 @@ const server = new ApolloServer({
   uploads: false,
   cors: {
     credentials: true,
-    origin: ['http://localhost:3030']
+    origin: ['http://localhost:3030', 'https://studio.apollographql.com']
   },
 })
 

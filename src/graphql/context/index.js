@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
-import { UsersApi } from './user/datasources'
-import { cookieParser } from './login/utils/login-functions'
+import { UsersApi } from '../schema/user/datasources'
+import { cookieParser } from '../schema/login/utils/login-functions'
 
 const verifyJwtToken = async (token) => {
   try {
